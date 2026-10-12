@@ -4,7 +4,6 @@
 > Este guia explica **conceitos**. O código você constrói acompanhando o tutorial.
 
 ---
-
 ## 1. Qual é a ideia?
 
 Construir uma API em que **as regras de negócio vivem isoladas** e **não sabem que existe HTTP, banco de dados ou framework**.
