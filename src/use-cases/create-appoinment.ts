@@ -19,6 +19,12 @@ export class CreateAppoinment {
             endsAt
         })
 
+        const overlappingAppointment = await this.appointmentsRepository.findOverlappingAppointment(startsAt, endsAt)
+
+        if (overlappingAppointment) {
+            throw new Error('No overlapping appointments allowed')
+        }
+
         await this.appointmentsRepository.create(appointment)
         return appointment
     }
