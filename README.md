@@ -1,9 +1,9 @@
-# Guia: API testável com SOLID, independente de framework
+# Arquitetura Limpa e SOLID: conceitos
 
-> Anotações de estudo para o projeto **apps-testaveis**, uma API de agendamento de horários.
-> Este guia explica **conceitos**. O código você constrói acompanhando o tutorial.
+> Anotações de estudo do **backend-architecture-lab**. Os exemplos usam o domínio de agendamento de horários.
 
 ---
+
 ## 1. Qual é a ideia?
 
 Construir uma API em que **as regras de negócio vivem isoladas** e **não sabem que existe HTTP, banco de dados ou framework**.
@@ -55,7 +55,7 @@ Essa distinção costuma confundir no começo:
 
 ---
 
-## 4. SOLID aplicado ao projeto
+## 4. SOLID aplicado
 
 ### S: Single Responsibility (Responsabilidade Única)
 Cada classe tem **um único motivo para mudar**. A entidade cuida de ser válida, o caso de uso cuida de uma ação e o repositório cuida de persistência.
@@ -70,7 +70,7 @@ Qualquer implementação de um contrato (em memória, banco A, banco B) deve pod
 Contratos **pequenos e focados**. Exponha só o que os casos de uso realmente usam, nada de interfaces "faz-tudo".
 
 ### D: Dependency Inversion (Inversão de Dependência) ⭐
-**O princípio central deste projeto.**
+**O princípio central desta arquitetura.**
 - O caso de uso depende de uma **abstração** (o contrato do repositório), nunca de um banco concreto.
 - A implementação concreta é **entregue de fora**, normalmente pelo construtor. Isso se chama *injeção de dependência*.
 - Resultado: no teste você entrega uma versão falsa e simples. Em produção, entrega a real.
@@ -88,7 +88,7 @@ Vantagens:
 - Cada teste começa do zero, isolado dos outros.
 
 ### SUT (System Under Test)
-Termo comum em tutoriais: é o "sistema sob teste", ou seja, a classe que o teste está exercitando.
+É o "sistema sob teste", ou seja, a classe que o teste está exercitando.
 
 ### Estrutura de um bom teste (AAA)
 1. **Arrange (Preparar):** montar os dados e dependências.
@@ -109,7 +109,7 @@ Termo comum em tutoriais: é o "sistema sob teste", ou seja, a classe que o test
       /------\
      /Integração\     médio (banco real, HTTP real)
     /------------\
-   /  Unitários   \   MUITOS, rápidos, baratos  ← foco deste projeto
+   /  Unitários   \   MUITOS, rápidos, baratos
   /----------------\
 ```
 
@@ -145,45 +145,3 @@ Nenhuma regra de negócio mora aqui. Se você perceber uma regra escrita dentro 
 4. **Repositório em memória** = permite testar sem banco.
 5. **Injeção de dependência** = permite trocar implementações (o D do SOLID).
 6. **Framework e banco são detalhes** plugados nas bordas.
-
----
-
-## 10. Isso me leva ao nível pleno?
-
-**Ajuda bastante, mas sozinho não basta.** É um dos pilares do nível pleno, não ele inteiro.
-
-### O que este projeto me dá
-- **Pensar em arquitetura**: separar regra de negócio de detalhe técnico.
-- **SOLID na prática**, e não só a definição decorada.
-- **Escrever código testável** e entender *por que* ele é testável.
-- **Injeção de dependência**, presente em quase todo framework sério (NestJS, Spring, .NET).
-
-Em entrevistas, explicar bem *por que* isolei as regras e como testo sem banco já é um diferencial.
-
-### O que mais costuma separar júnior de pleno (em APIs)
-- **Banco de dados de verdade**: modelagem, migrations, índices, transações, um ORM (Prisma, TypeORM) e SQL básico.
-- **HTTP bem feito**: status codes corretos, validação de entrada (ex.: Zod), tratamento de erros padronizado e paginação.
-- **Autenticação e segurança**: JWT, refresh token, hash de senha, autorização por papel.
-- **Testes além dos unitários**: integração e E2E, e saber quando usar cada um.
-- **Operação**: Docker, variáveis de ambiente, logs, deploy e CI rodando os testes.
-- **Autonomia**: pegar uma tarefa vaga, quebrar em partes, tomar decisões razoáveis e entregar.
-- **Ler e manter código dos outros**, que é muito do dia a dia real.
-
-### Próximo passo
-Nível pleno vem mais de **experiência aplicando** do que de tutoriais.
-1. Terminar este tutorial.
-2. Construir **sozinho, sem tutorial**, uma API própria com a mesma arquitetura.
-3. Adicionar banco real, autenticação, Docker, testes e deploy.
-4. Publicar no GitHub com um README explicando as decisões.
-
-> Este projeto é um **degrau**, não a chegada.
-
----
-
-## 11. Comandos úteis
-
-| Comando | O que faz |
-|---|---|
-| `npx vitest` | Roda os testes em modo watch |
-| `npx vitest run` | Roda os testes uma vez |
-| `npx tsc --noEmit` | Checa os tipos sem gerar arquivos |
